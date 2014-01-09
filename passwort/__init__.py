@@ -178,6 +178,9 @@ def main():
 		'--dump', dest='dump', action='store_true')
 
 	parser.add_argument(
+		'--list-nodes', dest='list_nodes', action='store_true')
+
+	parser.add_argument(
 		'--verbose', '-v', action='store_true')
 
 	args = parser.parse_args()
@@ -218,6 +221,11 @@ def main():
 			username = keychain.get(n, Keychain.USERNAME_FIELD)
 			password = keychain.get(n, Keychain.PASSWORD_FIELD)
 			print("%s\t%s\t%s" % (n, username, password))
+		return 0
+
+	if args.list_nodes:
+		for node_name in keychain.root:
+			print(node_name)
 		return 0
 
 	if args.node is None:
