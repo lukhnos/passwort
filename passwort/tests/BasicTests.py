@@ -67,7 +67,7 @@ class TestPasswort(unittest.TestCase):
         k3.load(self.temp_filename)
 
         with self.assertRaises(NameError):
-            v3 = k3.get('example.com', passwort.Keychain.PASSWORD_FIELD)
+            k3.get('example.com', passwort.Keychain.PASSWORD_FIELD)
 
 if __name__ == '__main__':
     unittest.main()

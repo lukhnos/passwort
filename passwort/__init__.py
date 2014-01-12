@@ -15,7 +15,7 @@ from Crypto.Cipher import AES
 from Crypto.Hash import HMAC
 from Crypto.Hash import SHA256
 
-ALGO_NAME ="aes256-cbc-sha256"
+ALGO_NAME = "aes256-cbc-sha256"
 IV_SIZE = AES.block_size
 KEY_SIZE = 32
 
@@ -33,9 +33,9 @@ def hmac(key):
     return HMAC.new(key, digestmod=SHA256)
 
 def derive_key(key):
-    cipher = AES.new(key, AES.MODE_ECB)
-    enc_key = cipher.encrypt(b'\x00' * len(key))
-    hmac_key = cipher.encrypt(b'\x00' * SHA256.digest_size)
+    c = AES.new(key, AES.MODE_ECB)
+    enc_key = c.encrypt(b'\x00' * len(key))
+    hmac_key = c.encrypt(b'\x00' * SHA256.digest_size)
     return (enc_key, hmac_key)
 
 def enc(enc_key, hmac_key, plaintext=None):
