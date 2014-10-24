@@ -136,52 +136,22 @@ class Keychain(object):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        '--file', metavar='FILE', dest='file', help='data file')
-
-    parser.add_argument(
-        '--generate-key-to-stdout', dest='generate_key_to_stdout',
-        action='store_true')
-
-    parser.add_argument(
-        '--key', metavar='KEY', dest='key', help='AES key')
-
-    parser.add_argument(
-        '--key-from-stdin', dest='key_from_stdin', action='store_true')
-
-    parser.add_argument(
-        '--node', dest='node')
-
-    parser.add_argument(
-        '--get-password', dest='get_password', action='store_true')
-
-    parser.add_argument(
-        '--set-password', dest='set_password', action='store_true')
-
-    parser.add_argument(
-        '--generate-and-set-password', metavar='LENGTH',
-        dest='generate_and_set_password')
-
-    parser.add_argument(
-        '--get-username', dest='get_username', action='store_true')
-
-    parser.add_argument(
-        '--set-username', dest='set_username')
-
-    parser.add_argument(
-        '--show-note', dest='show_note', action='store_true')
-
-    parser.add_argument(
-        '--edit-note', dest='edit_note', action='store_true')
-
-    parser.add_argument(
-        '--dump', dest='dump', action='store_true')
-
-    parser.add_argument(
-        '--list-nodes', dest='list_nodes', action='store_true')
-
-    parser.add_argument(
-        '--verbose', '-v', action='store_true')
+    parser.add_argument('--file', help='data file')
+    parser.add_argument('--generate-key-to-stdout', action='store_true')
+    parser.add_argument('--key', help='AES key file')
+    parser.add_argument('--key-from-stdin', action='store_true')
+    parser.add_argument('--node')
+    parser.add_argument('--get-password', action='store_true')
+    parser.add_argument('--set-password', action='store_true',
+        help='Interactively set password')
+    parser.add_argument('--generate-and-set-password', metavar='length')
+    parser.add_argument('--get-username', action='store_true')
+    parser.add_argument('--set-username', metavar='username')
+    parser.add_argument('--show-note', action='store_true')
+    parser.add_argument('--edit-note', action='store_true')
+    parser.add_argument('--dump', action='store_true')
+    parser.add_argument('--list-nodes', action='store_true')
+    parser.add_argument('--verbose', '-v', action='store_true')
 
     args = parser.parse_args()
 
