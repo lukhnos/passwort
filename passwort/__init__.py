@@ -216,15 +216,14 @@ def main():
         keychain.load(args.file)
 
     if args.dump:
-        node_names = keychain.root.keys()
-        for n in node_names:
+        for n in sorted(keychain.root.keys()):
             username = keychain.get(n, Keychain.USERNAME_FIELD)
             password = keychain.get(n, Keychain.PASSWORD_FIELD)
             print("%s\t%s\t%s" % (n, username, password))
         return 0
 
     if args.list_nodes:
-        for node_name in keychain.root:
+        for node_name in sorted(keychain.root.keys()):
             print(node_name)
         return 0
 
