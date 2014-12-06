@@ -133,6 +133,26 @@ class Keychain(object):
         self.root[node_name] = node
         self.dirty = True
 
+    def decrypt_all(self):
+        decrypted_root = {}
+        for node_name in self.root:
+            node = {}
+            username = self.get(node_name, self.USERNAME_FIELD)
+            password = self.get(node_name, self.PASSWORD_FIELD)
+            note = self.get(node_name, self.NOTE_FIELD)
+
+            if username:
+                node[self.USERNAME_FIELD] = username
+            if password:
+                node[self.PASSWORD_FIELD] = password
+            if note:
+                node[self.NOTE_FIELD]= note
+
+            decrypted_root[node_name] = node
+
+        return decrypted_root
+
+
 def main():
     parser = argparse.ArgumentParser()
 
@@ -151,6 +171,7 @@ def main():
     parser.add_argument('--edit-note', action='store_true')
     parser.add_argument('--dump', action='store_true')
     parser.add_argument('--list-nodes', action='store_true')
+    parser.add_argument('--decrypt-all', action='store_true')
     parser.add_argument('--verbose', '-v', action='store_true')
 
     args = parser.parse_args()
@@ -184,6 +205,12 @@ def main():
 
     if os.path.exists(args.file):
         keychain.load(args.file)
+
+    if args.decrypt_all:
+        decrypted_root = keychain.decrypt_all()
+        params = {'sort_keys':True, 'indent':4, 'separators':(',', ': ')}
+        print json.dumps(decrypted_root, **params)
+        return 0
 
     if args.dump:
         for n in sorted(keychain.root.keys()):
