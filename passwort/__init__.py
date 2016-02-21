@@ -69,6 +69,18 @@ def show(s):
 def generate_key():
     return Random.new().read(KEY_SIZE)
 
+def gpg_decrypt(path):
+    args = ['gpg', '-d', path]
+
+    process = subprocess.Popen(args, stdin=subprocess.PIPE,
+                               stdout=subprocess.PIPE)
+
+    out, err = process.communicate()
+    if process.returncode != 0:
+        return None
+    return out
+
+
 class Keychain(object):
     USERNAME_FIELD = 'username'
     PASSWORD_FIELD = 'password'
@@ -159,6 +171,7 @@ def main():
     parser.add_argument('--file', help='data file')
     parser.add_argument('--generate-key-to-stdout', action='store_true')
     parser.add_argument('--key', help='AES key file')
+    parser.add_argument('--key-from-gpg', help='key file decrypted by GPG')
     parser.add_argument('--key-from-stdin', action='store_true')
     parser.add_argument('--node')
     parser.add_argument('--get-password', action='store_true')
@@ -184,8 +197,9 @@ def main():
 
     if args.key_from_stdin:
         key = sys.stdin.read()
-
-    if args.key:
+    elif args.key_from_gpg:
+        key = gpg_decrypt(args.key_from_gpg)
+    elif args.key:
         if os.path.exists(args.key):
             key = open(args.key).read()
         else:
