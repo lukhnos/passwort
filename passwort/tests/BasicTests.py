@@ -57,7 +57,7 @@ class TestPasswort(unittest.TestCase):
         data = json.load(open(self.temp_filename))
         enc_password_value = base64.b64decode(data['example.com']['password']['text'])
         tampered_value = Random.new().read(16) + enc_password_value[16:]
-        data['example.com']['password']['text'] = base64.b64encode(tampered_value)
+        data['example.com']['password']['text'] = base64.b64encode(tampered_value).decode()
         f = open(self.temp_filename, "w")
         f.write(json.dumps(data))
         f.close()

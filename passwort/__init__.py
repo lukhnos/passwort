@@ -24,7 +24,7 @@ def pad(s):
     return s + chr(padded_len) * padded_len
 
 def unpad(s):
-    return s[0:-ord(s[-1])]
+    return s[0:-s[-1]]
 
 def cipher(key, iv):
     return AES.new(key, AES.MODE_CBC, iv)
@@ -41,12 +41,12 @@ def derive_key(key):
 def enc(enc_key, hmac_key, plaintext=None):
     iv = Random.new().read(IV_SIZE)
     h = hmac(hmac_key)
-    h.update(plaintext)
-    hmac_tag = base64.b64encode(h.digest())
-    ciphertext = base64.b64encode(cipher(enc_key, iv).encrypt(pad(plaintext)))
+    h.update(plaintext.encode())
+    hmac_tag = base64.b64encode(h.digest()).decode()
+    ciphertext = base64.b64encode(cipher(enc_key, iv).encrypt(pad(plaintext))).decode()
     return dict(algorithm=ALGO_NAME,
         timestamp=calendar.timegm(time.gmtime()),
-        iv=base64.b64encode(iv),
+        iv=base64.b64encode(iv).decode(),
         hmac=hmac_tag,
         text=ciphertext)
 
@@ -58,7 +58,7 @@ def dec(enc_key, hmac_key, data={}):
     h.update(plaintext)
     if h.digest() != base64.b64decode(data['hmac']):
         raise NameError('HMAC mismatch')
-    return plaintext
+    return plaintext.decode()
 
 def show(s):
     if s is not None:
@@ -223,7 +223,7 @@ def main():
     if args.decrypt_all:
         decrypted_root = keychain.decrypt_all()
         params = {'sort_keys':True, 'indent':4, 'separators':(',', ': ')}
-        print json.dumps(decrypted_root, **params)
+        print(json.dumps(decrypted_root, **params))
         return 0
 
     if args.dump:
@@ -284,7 +284,7 @@ def main():
 
         old_note = keychain.get(args.node, Keychain.NOTE_FIELD)
         if old_note is None:
-            old_note = ''
+            old_note = b''
 
         tf.write(old_note)
         tf.close()
