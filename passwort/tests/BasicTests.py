@@ -4,7 +4,7 @@ import os
 import passwort
 import tempfile
 import unittest
-from Crypto import Random
+from Cryptodome import Random
 
 
 class TestPasswort(unittest.TestCase):
@@ -55,7 +55,9 @@ class TestPasswort(unittest.TestCase):
         v2 = k2.get('example.com', passwort.Keychain.PASSWORD_FIELD)
         self.assertEqual(v2, v1)
 
-        data = json.load(open(self.temp_filename))
+        tmp = open(self.temp_filename)
+        data = json.load(tmp)
+        tmp.close()
         enc_password_value = base64.b64decode(data['example.com']['password']['text'])
         tampered_value = Random.new().read(16) + enc_password_value[16:]
         data['example.com']['password']['text'] = base64.b64encode(tampered_value).decode()

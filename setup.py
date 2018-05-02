@@ -9,7 +9,7 @@ setup(
     packages=['passwort'],
     install_requires=[
         'pwgen >= 0.4',
-        'pycrypto >= 2.6.1'
+        'pycryptodomex >=3.6.1',
     ],
     test_suite='passwort.tests',
     entry_points={

@@ -10,10 +10,10 @@ import subprocess
 import sys
 import tempfile
 import time
-from Crypto import Random
-from Crypto.Cipher import AES
-from Crypto.Hash import HMAC
-from Crypto.Hash import SHA256
+from Cryptodome import Random
+from Cryptodome.Cipher import AES
+from Cryptodome.Hash import HMAC
+from Cryptodome.Hash import SHA256
 
 ALGO_NAME = "aes256-cbc-sha256"
 IV_SIZE = AES.block_size
@@ -22,7 +22,7 @@ KEY_SIZE = 32
 
 def pad(s):
     padded_len = AES.block_size - len(s) % AES.block_size
-    return s + chr(padded_len) * padded_len
+    return s + bytearray((padded_len,)) * padded_len
 
 
 def unpad(s):
@@ -45,11 +45,12 @@ def derive_key(key):
 
 
 def enc(enc_key, hmac_key, plaintext=None):
+    plaintext_bytes = plaintext.encode()
     iv = Random.new().read(IV_SIZE)
     h = hmac(hmac_key)
-    h.update(plaintext.encode())
+    h.update(plaintext_bytes)
     hmac_tag = base64.b64encode(h.digest()).decode()
-    ciphertext = base64.b64encode(cipher(enc_key, iv).encrypt(pad(plaintext))).decode()
+    ciphertext = base64.b64encode(cipher(enc_key, iv).encrypt(pad(plaintext_bytes))).decode()
     return dict(algorithm=ALGO_NAME,
                 timestamp=calendar.timegm(time.gmtime()),
                 iv=base64.b64encode(iv).decode(),
@@ -117,7 +118,8 @@ class Keychain(object):
         if self.dirty:
             raise NameError('load must not be called while keychain is dirty')
 
-        self.root = json.load(open(filename))
+        with open(filename) as f:
+            self.root = json.load(f)
 
     def save(self, filename, pretty=True):
         if not self.dirty:
