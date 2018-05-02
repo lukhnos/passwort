@@ -19,24 +19,30 @@ ALGO_NAME = "aes256-cbc-sha256"
 IV_SIZE = AES.block_size
 KEY_SIZE = 32
 
+
 def pad(s):
     padded_len = AES.block_size - len(s) % AES.block_size
     return s + chr(padded_len) * padded_len
 
+
 def unpad(s):
     return s[0:-s[-1]]
+
 
 def cipher(key, iv):
     return AES.new(key, AES.MODE_CBC, iv)
 
+
 def hmac(key):
     return HMAC.new(key, digestmod=SHA256)
+
 
 def derive_key(key):
     c = AES.new(key, AES.MODE_ECB)
     enc_key = c.encrypt(b'\x00' * len(key))
     hmac_key = c.encrypt(b'\x00' * SHA256.digest_size)
     return (enc_key, hmac_key)
+
 
 def enc(enc_key, hmac_key, plaintext=None):
     iv = Random.new().read(IV_SIZE)
@@ -45,10 +51,11 @@ def enc(enc_key, hmac_key, plaintext=None):
     hmac_tag = base64.b64encode(h.digest()).decode()
     ciphertext = base64.b64encode(cipher(enc_key, iv).encrypt(pad(plaintext))).decode()
     return dict(algorithm=ALGO_NAME,
-        timestamp=calendar.timegm(time.gmtime()),
-        iv=base64.b64encode(iv).decode(),
-        hmac=hmac_tag,
-        text=ciphertext)
+                timestamp=calendar.timegm(time.gmtime()),
+                iv=base64.b64encode(iv).decode(),
+                hmac=hmac_tag,
+                text=ciphertext)
+
 
 def dec(enc_key, hmac_key, data={}):
     iv = base64.b64decode(data['iv'])
@@ -60,14 +67,17 @@ def dec(enc_key, hmac_key, data={}):
         raise NameError('HMAC mismatch')
     return plaintext.decode()
 
+
 def show(s):
     if s is not None:
         sys.stdout.write(s)
         if sys.stdout.isatty():
             sys.stdout.write('\n')
 
+
 def generate_key():
     return Random.new().read(KEY_SIZE)
+
 
 def gpg_decrypt(path):
     args = ['gpg', '-d', path]
@@ -114,7 +124,7 @@ class Keychain(object):
             return
 
         if pretty:
-            params = {'sort_keys':True, 'indent':4, 'separators':(',', ': ')}
+            params = {'sort_keys': True, 'indent': 4, 'separators': (',', ': ')}
         else:
             params = {}
 
@@ -158,7 +168,7 @@ class Keychain(object):
             if password:
                 node[self.PASSWORD_FIELD] = password
             if note:
-                node[self.NOTE_FIELD]= note
+                node[self.NOTE_FIELD] = note
 
             decrypted_root[node_name] = node
 
@@ -176,7 +186,7 @@ def main():
     parser.add_argument('--node')
     parser.add_argument('--get-password', action='store_true')
     parser.add_argument('--set-password', action='store_true',
-        help='Interactively set password')
+                        help='Interactively set password')
     parser.add_argument('--generate-and-set-password', metavar='length')
     parser.add_argument('--get-username', action='store_true')
     parser.add_argument('--set-username', metavar='username')
@@ -222,7 +232,7 @@ def main():
 
     if args.decrypt_all:
         decrypted_root = keychain.decrypt_all()
-        params = {'sort_keys':True, 'indent':4, 'separators':(',', ': ')}
+        params = {'sort_keys': True, 'indent': 4, 'separators': (',', ': ')}
         print(json.dumps(decrypted_root, **params))
         return 0
 

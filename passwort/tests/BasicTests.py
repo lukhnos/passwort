@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from Crypto import Random
 
+
 class TestPasswort(unittest.TestCase):
 
     def setUp(self):
@@ -68,6 +69,7 @@ class TestPasswort(unittest.TestCase):
 
         with self.assertRaises(NameError):
             k3.get('example.com', passwort.Keychain.PASSWORD_FIELD)
+
 
 if __name__ == '__main__':
     unittest.main()
