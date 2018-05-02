@@ -195,6 +195,7 @@ def main():
     parser.add_argument('--show-note', action='store_true')
     parser.add_argument('--edit-note', action='store_true')
     parser.add_argument('--dump', action='store_true')
+    parser.add_argument('--with-header', action='store_true')
     parser.add_argument('--list-nodes', action='store_true')
     parser.add_argument('--decrypt-all', action='store_true')
     parser.add_argument('--verbose', '-v', action='store_true')
@@ -239,6 +240,8 @@ def main():
         return 0
 
     if args.dump:
+        if args.with_header:
+            print("%s\t%s\t%s" % ("title", "username", "password"))
         for n in sorted(keychain.root.keys()):
             username = keychain.get(n, Keychain.USERNAME_FIELD)
             password = keychain.get(n, Keychain.PASSWORD_FIELD)
@@ -254,16 +257,21 @@ def main():
         sys.stderr.write('no node specified\n')
         return 1
 
+    shown = False
+
     if args.get_username:
         show(keychain.get(args.node, Keychain.USERNAME_FIELD))
-        return 0
+        shown = True
 
     if args.get_password:
         show(keychain.get(args.node, Keychain.PASSWORD_FIELD))
-        return 0
+        shown = True
 
     if args.show_note:
         show(keychain.get(args.node, Keychain.NOTE_FIELD))
+        shown = True
+
+    if shown:
         return 0
 
     if args.generate_and_set_password:
