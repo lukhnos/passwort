@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name='passwort',
-    version='1.1',
     description='A simple password manager',
+    version='1.1.1',
     author='Lukhnos Liu',
     author_email='lukhnos@lukhnos.org',
     url='https://github.com/lukhnos/passwort',
