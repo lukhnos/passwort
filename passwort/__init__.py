@@ -41,7 +41,7 @@ def derive_key(key):
     c = AES.new(key, AES.MODE_ECB)
     enc_key = c.encrypt(b'\x00' * len(key))
     hmac_key = c.encrypt(b'\x00' * SHA256.digest_size)
-    return (enc_key, hmac_key)
+    return enc_key, hmac_key
 
 
 def enc(enc_key, hmac_key, plaintext=None):
@@ -58,7 +58,9 @@ def enc(enc_key, hmac_key, plaintext=None):
                 text=ciphertext)
 
 
-def dec(enc_key, hmac_key, data={}):
+def dec(enc_key, hmac_key, data=None):
+    if data is None:
+        data = {}
     iv = base64.b64decode(data['iv'])
     ciphertext = base64.b64decode(data['text'])
     plaintext = unpad(cipher(enc_key, iv).decrypt(ciphertext))

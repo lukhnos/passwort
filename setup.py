@@ -3,8 +3,8 @@ from setuptools import setup
 setup(
     name='passwort',
     version='1.0',
-    author = 'Lukhnos Liu',
-    author_email = 'lukhnos@lukhnos.org',
+    author='Lukhnos Liu',
+    author_email='lukhnos@lukhnos.org',
     license='MIT',
     packages=['passwort'],
     install_requires=[
