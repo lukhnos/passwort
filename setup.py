@@ -10,6 +10,7 @@ setup(
     install_requires=[
         'pwgen >= 0.4',
         'pycryptodomex >=3.6.1',
+        'six >=1.10.0',
     ],
     test_suite='passwort.tests',
     entry_points={
