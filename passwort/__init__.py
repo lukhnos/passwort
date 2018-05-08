@@ -307,9 +307,9 @@ def main():
 
         old_note = keychain.get(args.node, Keychain.NOTE_FIELD)
         if old_note is None:
-            old_note = b''
+            old_note = ''
 
-        tf.write(old_note)
+        tf.write(old_note.encode())
         tf.close()
         tfn = os.path.join(os.getcwd(), tf.name)
         tf.close()
