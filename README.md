@@ -38,7 +38,7 @@ that below.
 
 To install:
 
-	pip3 install -e .
+	pip3 install passwort
 
 You may need to add `sudo` in front of the command line. Passwort depends
 on [PyCrypto](https://www.dlitz.net/software/pycrypto/) and
