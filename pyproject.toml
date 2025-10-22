@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "passwort"
+version = "1.1.2"
+dependencies = [
+  "pwgen>=0.4",
+  "pycryptodomex>=3.6.1",
+  "six>=1.10.0",
+]
+description = "A simple password manager"
+authors = [
+  {name = "Lukhnos Liu", email = "lukhnos@lukhnos.org"},
+]
+readme = "README.md"
+license = "MIT"
+
+[project.scripts]
+passwort = "passwort:main"
+
+[project.urls]
+Homepage = "https://github.com/lukhnos/passwort"
