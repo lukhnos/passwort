@@ -14,7 +14,6 @@ from Cryptodome import Random
 from Cryptodome.Cipher import AES
 from Cryptodome.Hash import HMAC
 from Cryptodome.Hash import SHA256
-from six import indexbytes
 
 ALGO_NAME = "aes256-cbc-sha256"
 IV_SIZE = AES.block_size
@@ -27,7 +26,7 @@ def pad(s):
 
 
 def unpad(s):
-    return s[0:-indexbytes(s, -1)]
+    return s[0:-s[-1]]
 
 
 def cipher(key, iv):
